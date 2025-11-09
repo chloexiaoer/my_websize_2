@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>处方笺</title>
+    <style>
+        /* 引入两种不同的手写字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&display=swap');
+
+        body {
+            font-family: 'SimSun', '宋体', sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            padding: 30px 0;
+            color: #000;
+        }
+
+        .prescription-container {
+            position: relative;
+            width: 750px;
+            background: white;
+            padding: 40px 50px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* ... (其他CSS样式保持不变) ... */
+
+        .footer-section {
+            border-top: 1px solid #000;
+            padding-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px 30px;
+            font-size: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .footer-item {
+            display: flex;
+            align-items: flex-end;
+        }
+        .footer-item label {
+            white-space: nowrap;
+            margin-right: 5px;
+        }
+        .footer-item .value {
+            border-bottom: 1px solid #333;
+            flex-grow: 1;
+            min-height: 20px;
+            padding: 0 5px;
+        }
+        
+        .final-note {
+            margin-top: 30px;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        [contenteditable="true"] {
+            outline: none;
+            cursor: text;
+        }
+
+        /* 定义第一个签名样式（孙旺强），使用Zhi Mang Xing字体 */
+        .signature-sun {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 24px; /* 调整字号以获得更佳视觉效果 */
+            font-weight: 500;
+            line-height: 1;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+        
+        /* 定义第二个签名样式（沈文文），使用Ma Shan Zheng字体 */
+        .signature-shen {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        /* 保留一个通用的手写体类，以备不时之需 */
+        .handwritten {
+            font-family: 'Ma Shan Zheng', 'KaiTi', '楷体', cursive;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+        
+        /* 省略其他未修改的CSS */
+        .header, .info-section, .rp-section, .supplementary-section, .stamp, .watermark {
+            /* 这些部分的样式与之前完全相同，为简洁省略 */
+        }
+        .header { text-align: center; position: relative; z-index: 2; } .header .hospital-name { font-size: 32px; font-weight: bold; margin: 0; } .header .prescription-title { font-size: 36px; font-weight: bold; margin: 10px 0; letter-spacing: 5px; } .rx-type-box { position: absolute; top: 0; right: 0; border: 1px solid #000; padding: 2px 8px; font-size: 14px; } .stamp { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 160px; height: 160px; border: 3px solid red; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0.8; } .stamp .star { font-size: 70px; color: red; line-height: 1; } .stamp .stamp-text { position: absolute; width: 100%; height: 100%; color: red; font-weight: bold; font-size: 16px; } .stamp-text span { position: absolute; left: 50%; top: 3px; transform-origin: center 77px; } .stamp-text .char1 { transform: translateX(-50%) rotate(-75deg); } .stamp-text .char2 { transform: translateX(-50%) rotate(-60deg); } .stamp-text .char3 { transform: translateX(-50%) rotate(-45deg); } .stamp-text .char4 { transform: translateX(-50%) rotate(-30deg); } .stamp-text .char5 { transform: translateX(-50%) rotate(-15deg); } .stamp-text .char6 { transform: translateX(-50%) rotate(0deg); } .stamp-text .char7 { transform: translateX(-50%) rotate(15deg); } .stamp-text .char8 { transform: translateX(-50%) rotate(30deg); } .stamp-text .char9 { transform: translateX(-50%) rotate(45deg); } .stamp-text .char10 { transform: translateX(-50%) rotate(60deg); } .stamp-text .char11 { transform: translateX(-50%) rotate(75deg); } .stamp .inner-text { position: absolute; bottom: 35px; font-size: 14px; color: red; letter-spacing: 1px; font-weight: bold; } .info-section { border-top: 3px double #000; border-bottom: 1px solid #000; padding: 15px 0; margin-top: 15px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px 20px; font-size: 16px; position: relative; z-index: 2; } .info-item { display: flex; align-items: flex-end; } .info-item label { white-space: nowrap; margin-right: 5px; font-weight: bold; } .info-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; } .full-width { grid-column: 1 / -1; } .no-label .value { border-bottom: none; text-align: right; } .rp-section { padding: 10px 0; border-bottom: 1px solid #000; min-height: 150px; position: relative; z-index: 2; } .rp-label { font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: bold; font-style: italic; margin: 0 0 15px 0; } .medication { padding-left: 2em; font-size: 16px; } .medication-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; } .medication-details { display: flex; justify-content: space-between; margin-bottom: 8px; } .supplementary-section { padding: 15px 0; min-height: 60px; font-size: 16px; display: flex; position: relative; z-index: 2; } .supplementary-section strong { white-space: nowrap; margin-right: 5px; } .supplementary-section .handwritten-note { position: absolute; bottom: 20px; right: 150px; } .watermark { position: absolute; font-size: 24px; font-weight: bold; color: #000000; opacity: 0.1; transform: rotate(-30deg); pointer-events: none; z-index: 0; }
+
+    </style>
+</head>
+<body>
+
+    <div class="prescription-container">
+        <!-- Watermarks Layer -->
+        <div class="watermark" style="top: 10px; left: 40px;">已使用</div>
+        <div class="watermark" style="top: 20px; right: 200px;">已使用</div>
+        <div class="watermark" style="top: 100px; left: 320px;">已使用</div>
+        <div class="watermark" style="top: 180px; left: 20px;">已使用</div>
+        <div class="watermark" style="top: 160px; right: 20px;">已使用</div>
+        <div class="watermark" style="top: 250px; left: 380px;">已使用</div>
+        <div class="watermark" style="top: 300px; left: 150px;">已使用</div>
+        <div class="watermark" style="top: 320px; right: 280px;">已使用</div>
+        <div class="watermark" style="top: 400px; left: 50px;">已使用</div>
+        <div class="watermark" style="top: 480px; right: 50px;">已使用</div>
+        <div class="watermark" style="top: 500px; left: 220px;">已使用</div>
+        <div class="watermark" style="top: 550px; left: 400px;">已使用</div>
+        <div class="watermark" style="top: 600px; right: 250px;">已使用</div>
+        <div class="watermark" style="top: 680px; left: 100px;">已使用</div>
+        <div class="watermark" style="top: 700px; right: 100px;">已使用</div>
+
+        <!-- Content Layer -->
+        <div class="header">
+            <div class="rx-type-box">普通处方</div>
+            <h1 class="hospital-name">成都双流桃子互联网医院</h1>
+            <h2 class="prescription-title">处方笺</h2>
+            <div class="stamp">
+                <div class="star">★</div>
+                <div class="stamp-text">
+                    <span class="char1">成</span> <span class="char2">都</span> <span class="char3">双</span> <span class="char4">流</span> <span class="char5">桃</span> <span class="char6">子</span> <span class="char7">互</span> <span class="char8">联</span> <span class="char9">网</span> <span class="char10">医</span> <span class="char11">院</span>
+                </div>
+                 <div class="inner-text">医疗专用章</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-item"> <label>NO.</label> <span class="value" contenteditable="true">130750175218385</span> </div> <div class="info-item no-label" style="grid-column: 3 / 4;"> <span class="value" contenteditable="true">2025-11-01</span> </div> <div class="info-item"> <label>姓名:</label> <span class="value" contenteditable="true">叶伟忠</span> </div> <div class="info-item"> <label>性别:</label> <span class="value" contenteditable="true">男</span> </div> <div class="info-item"> <label>年龄:</label> <span class="value" contenteditable="true">48岁</span> </div> <div class="info-item"> <label>费别:</label> <span class="value" contenteditable="true">自费</span> </div> <div class="info-item" style="grid-column: 2 / 4;"> <label>科别:</label> <span class="value" contenteditable="true">普通内科</span> </div> <div class="info-item full-width"> <label>临床诊断:</label> <span class="value" contenteditable="true">2型糖尿病</span> </div>
+        </div>
+
+        <div class="rp-section">
+            <p class="rp-label">Rp:</p>
+            <div class="medication"> <div class="medication-name" contenteditable="true">司美格鲁肽注射液</div> <div class="medication-details"> <span contenteditable="true">1.34mg/ml*3ml</span> <span contenteditable="true">x 3盒</span> </div> <div> <strong>用法用量:</strong> <span contenteditable="true">皮下注射,每周一次,一次1.0mg;</span> </div> </div>
+        </div>
+
+        <div class="supplementary-section">
+            <strong>补充说明:</strong>
+            <span contenteditable="true">无过敏药史,因疾病需要,特此确定用药。</span>
+            <span class="signature-sun handwritten-note">孙旺强</span>
+        </div>
+
+        <div class="footer-section">
+            <div class="footer-item">
+                <label>医师:</label>
+                <!-- 应用新的签名样式 -->
+                <span class="value signature-sun">孙旺强</span>
+            </div>
+            <div class="footer-item">
+                <label>审核:</label>
+                <span class="value handwritten">李飞</span>
+            </div>
+             <div class="footer-item">
+                <label>处方金额:</label>
+                <span class="value" contenteditable="true"></span>
+            </div>
+            <div class="footer-item">
+                <label>药房审核:</label>
+                <!-- 应用新的签名样式 -->
+                <span class="value signature-shen">沈文文</span>
+            </div>
+            <div class="footer-item">
+                <label>药房调配:</label>
+                <span class="value" contenteditable="true"></span>
+            </div>
+            <div class="footer-item">
+                <label>药房核对:</label>
+                <span class="value" contenteditable="true"></span>
+            </div>
+            <div class="footer-item" style="grid-column: 1/2">
+                <label>药房发药:</label>
+                <span class="value" contenteditable="true"></span>
+            </div>
+        </div>
+        
+        <div class="final-note">
+            <strong>注:</strong> 处方自开具日起3日内有效。
+        </div>
+    </div>
+
+</body>
+</html>
