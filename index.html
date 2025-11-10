@@ -49,6 +49,22 @@
             display: flex;
             flex-direction: column;
         }
+        
+        .form-group.radio-group label:first-child {
+            margin-bottom: 8px;
+        }
+        .form-group.radio-group div {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-top: 5px;
+        }
+        .form-group.radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .form-group.radio-group label {
+            font-weight: normal;
+        }
 
         .form-group label {
             margin-bottom: 8px;
@@ -143,14 +159,8 @@
         .signature-sun { font-family: 'Zhi Mang Xing', cursive; font-size: 24px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
         .signature-shen { font-family: 'Ma Shan Zheng', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
         .handwritten { font-family: 'Ma Shan Zheng', 'KaiTi', '楷体', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
-        
         .header { text-align: center; position: relative; z-index: 2; }
-        .header .hospital-name {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 0;
-            color: #000; /* 修改：将颜色设置为黑色 */
-        }
+        .header .hospital-name { font-size: 32px; font-weight: bold; margin: 0; color: #000; }
         .header .prescription-title { font-size: 36px; font-weight: bold; margin: 10px 0; letter-spacing: 5px; }
         .rx-type-box { position: absolute; top: 0; right: 0; border: 1px solid #000; padding: 2px 8px; font-size: 14px; }
         .stamp { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 160px; height: 160px; border: 3px solid red; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0.8; } .stamp .star { font-size: 70px; color: red; line-height: 1; } .stamp .stamp-text { position: absolute; width: 100%; height: 100%; color: red; font-weight: bold; font-size: 16px; } .stamp-text span { position: absolute; left: 50%; top: 3px; transform-origin: center 77px; } .stamp-text .char1 { transform: translateX(-50%) rotate(-75deg); } .stamp-text .char2 { transform: translateX(-50%) rotate(-60deg); } .stamp-text .char3 { transform: translateX(-50%) rotate(-45deg); } .stamp-text .char4 { transform: translateX(-50%) rotate(-30deg); } .stamp-text .char5 { transform: translateX(-50%) rotate(-15deg); } .stamp-text .char6 { transform: translateX(-50%) rotate(0deg); } .stamp-text .char7 { transform: translateX(-50%) rotate(15deg); } .stamp-text .char8 { transform: translateX(-50%) rotate(30deg); } .stamp-text .char9 { transform: translateX(-50%) rotate(45deg); } .stamp-text .char10 { transform: translateX(-50%) rotate(60deg); } .stamp-text .char11 { transform: translateX(-50%) rotate(75deg); } .stamp .inner-text { position: absolute; bottom: 35px; font-size: 14px; color: red; letter-spacing: 1px; font-weight: bold; } .info-section { border-top: 3px double #000; border-bottom: 1px solid #000; padding: 15px 0; margin-top: 15px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px 20px; font-size: 16px; position: relative; z-index: 2; } .info-item { display: flex; align-items: flex-end; } .info-item label { white-space: nowrap; margin-right: 5px; font-weight: bold; } .info-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; } .full-width { grid-column: 1 / -1; } .no-label .value { border-bottom: none; text-align: right; } .rp-section { padding: 10px 0; border-bottom: 1px solid #000; min-height: 150px; position: relative; z-index: 2; } .rp-label { font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: bold; font-style: italic; margin: 0 0 15px 0; } .medication { padding-left: 2em; font-size: 16px; } .medication-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; } .medication-details { display: flex; justify-content: space-between; margin-bottom: 8px; } .supplementary-section { padding: 15px 0; min-height: 60px; font-size: 16px; display: flex; position: relative; z-index: 2; } .supplementary-section strong { white-space: nowrap; margin-right: 5px; } .supplementary-section .handwritten-note { position: absolute; bottom: 20px; right: 150px; } .watermark { position: absolute; font-size: 24px; font-weight: bold; color: #000000; opacity: 0.1; transform: rotate(-30deg); pointer-events: none; z-index: 0; }
@@ -162,6 +172,7 @@
         <h1>处方笺信息填写</h1>
         <form id="prescription-form">
             <div class="form-grid">
+                <!-- 处方编号 -->
                  <div class="form-group full-span">
                     <label for="no-input">处方编号 (NO.)</label>
                     <div class="input-with-button">
@@ -169,6 +180,7 @@
                         <button type="button" id="generate-no-btn">自动生成</button>
                     </div>
                 </div>
+                <!-- 基础信息 -->
                 <div class="form-group">
                     <label for="name-input">姓名</label>
                     <input type="text" id="name-input" placeholder="请输入姓名" required>
@@ -184,22 +196,50 @@
                     <label for="age-input">年龄</label>
                     <input type="text" id="age-input" value="48岁" required>
                 </div>
+                <!-- 新增：不会显示在处方上的信息 -->
                 <div class="form-group">
+                    <label for="id-number-input">身份证号 (选填)</label>
+                    <input type="text" id="id-number-input" placeholder="仅用于填写，不显示">
+                </div>
+                <div class="form-group radio-group">
+                    <label>问诊方式</label>
+                    <div>
+                        <input type="radio" id="consult-text" name="consult_method" value="图文问诊" checked>
+                        <label for="consult-text">图文问诊</label>
+                        <input type="radio" id="consult-video" name="consult_method" value="视频问诊">
+                        <label for="consult-video">视频问诊</label>
+                    </div>
+                </div>
+                 <div class="form-group full-span">
+                    <label for="chief-complaint-input">主诉</label>
+                    <input type="text" id="chief-complaint-input" placeholder="仅用于填写，不显示">
+                </div>
+                <!-- 处方核心信息 -->
+                <div class="form-group full-span">
+                    <label for="diagnosis-input">诊断 (对应临床诊断)</label>
+                    <input type="text" id="diagnosis-input" value="2型糖尿病" required>
+                </div>
+                 <div class="form-group">
                     <label for="date-input">开具日期</label>
                     <input type="date" id="date-input" required>
                 </div>
-                <div class="form-group full-span">
+                <div class="form-group">
                     <label for="medication-input">药品名称</label>
                     <input type="text" id="medication-input" placeholder="请输入药品名称" required>
                 </div>
-                <div class="form-group full-span">
+                 <div class="form-group">
                     <label for="spec-input">规格</label>
                     <input type="text" id="spec-input" value="1.34mg/ml*3ml" required>
+                </div>
+                 <div class="form-group">
+                    <label for="quantity-input">数量</label>
+                    <input type="text" id="quantity-input" value="3" required>
                 </div>
                 <div class="form-group full-span">
                     <label for="dosage-input">用法用量</label>
                     <input type="text" id="dosage-input" value="皮下注射,每周一次,一次1.0mg;" required>
                 </div>
+                <!-- 签名信息 -->
                 <div class="form-group">
                     <label for="physician-input">医师签名</label>
                     <input type="text" id="physician-input" value="孙旺强">
@@ -237,7 +277,7 @@
             <div class="info-item"><label>年龄:</label> <span id="output-age" class="value" contenteditable="true"></span></div>
             <div class="info-item"><label>费别:</label> <span class="value" contenteditable="true">自费</span></div>
             <div class="info-item" style="grid-column: 2 / 4;"><label>科别:</label> <span class="value" contenteditable="true">普通内科</span></div>
-            <div class="info-item full-width"><label>临床诊断:</label> <span class="value" contenteditable="true">2型糖尿病</span></div>
+            <div class="info-item full-width"><label>临床诊断:</label> <span id="output-diagnosis" class="value" contenteditable="true"></span></div>
         </div>
         <div class="rp-section">
             <p class="rp-label">Rp:</p>
@@ -245,7 +285,7 @@
                 <div id="output-medication" class="medication-name" contenteditable="true"></div>
                 <div class="medication-details">
                     <span id="output-spec" contenteditable="true"></span>
-                    <span contenteditable="true">x 3盒</span>
+                    <span>x <span id="output-quantity"></span>盒</span>
                 </div>
                 <div><strong>用法用量:</strong> <span id="output-dosage" contenteditable="true"></span></div>
             </div>
@@ -276,30 +316,31 @@
         const genderInput = document.getElementById('gender-input');
         const ageInput = document.getElementById('age-input');
         const dateInput = document.getElementById('date-input');
+        const diagnosisInput = document.getElementById('diagnosis-input');
         const medicationInput = document.getElementById('medication-input');
         const specInput = document.getElementById('spec-input');
+        const quantityInput = document.getElementById('quantity-input');
         const dosageInput = document.getElementById('dosage-input');
         const physicianInput = document.getElementById('physician-input');
         const reviewerInput = document.getElementById('reviewer-input');
         const pharmacyReviewerInput = document.getElementById('pharmacy-reviewer-input');
+        // 新增的、不显示在处方上的字段，我们不需要获取它们的引用，因为它们不参与更新预览
 
         const outputNo = document.getElementById('output-no');
         const outputName = document.getElementById('output-name');
         const outputGender = document.getElementById('output-gender');
         const outputAge = document.getElementById('output-age');
         const outputDate = document.getElementById('output-date');
+        const outputDiagnosis = document.getElementById('output-diagnosis');
         const outputMedication = document.getElementById('output-medication');
         const outputSpec = document.getElementById('output-spec');
+        const outputQuantity = document.getElementById('output-quantity');
         const outputDosage = document.getElementById('output-dosage');
         const outputPhysician = document.getElementById('output-physician');
         const outputSupPhysician = document.getElementById('output-sup-physician');
         const outputReviewer = document.getElementById('output-reviewer');
         const outputPharmacyReviewer = document.getElementById('output-pharmacy-reviewer');
 
-        /**
-         * 生成一个基于时间戳的、看起来真实的15位处方编号
-         * @returns {string} - 生成的15位编号字符串
-         */
         function generateRealisticPrescriptionNumber() {
             const timestamp = Date.now().toString();
             const randomSuffix = Math.floor(Math.random() * 100).toString().padStart(2, '0');
@@ -316,8 +357,10 @@
             outputGender.textContent = genderInput.value || ' ';
             outputAge.textContent = ageInput.value || ' ';
             outputDate.textContent = dateInput.value || ' ';
+            outputDiagnosis.textContent = diagnosisInput.value || ' ';
             outputMedication.textContent = medicationInput.value || ' ';
             outputSpec.textContent = specInput.value || ' ';
+            outputQuantity.textContent = quantityInput.value || ' ';
             outputDosage.textContent = dosageInput.value || ' ';
             
             const physicianName = physicianInput.value || ' ';
