@@ -3,193 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>处方笺</title>
+    <title>处方笺生成器</title>
+    <!-- 引入两种不同的手写字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    
     <style>
-        /* 引入两种不同的手写字体 */
-        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&display=swap');
-
+        /* --- 页面和表单的样式 --- */
         body {
-            font-family: 'SimSun', '宋体', sans-serif;
-            background-color: #f8f8f8;
-            display: flex;
-            justify-content: center;
-            padding: 30px 0;
-            color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
         }
 
+        .generator-container {
+            max-width: 750px;
+            margin: 0 auto 30px auto;
+            padding: 25px 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+             border-color: #1a73e8;
+             outline: none;
+             box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .full-span {
+            grid-column: 1 / -1;
+        }
+
+        .input-with-button {
+            display: flex;
+            align-items: center;
+        }
+        .input-with-button input {
+            flex-grow: 1;
+        }
+        .input-with-button button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+        .input-with-button button:hover {
+            background-color: #4cae4c;
+        }
+
+
+        .generate-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            background-color: #155ab6;
+        }
+
+        /* --- 以下是您提供的处方笺样式 --- */
         .prescription-container {
             position: relative;
             width: 750px;
+            margin: 0 auto;
             background: white;
             padding: 40px 50px;
             border: 1px solid #e0e0e0;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             overflow: hidden;
+            box-sizing: border-box;
         }
         
-        /* ... (其他CSS样式保持不变) ... */
-
-        .footer-section {
-            border-top: 1px solid #000;
-            padding-top: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px 30px;
-            font-size: 16px;
-            position: relative;
-            z-index: 2;
-        }
-        .footer-item {
-            display: flex;
-            align-items: flex-end;
-        }
-        .footer-item label {
-            white-space: nowrap;
-            margin-right: 5px;
-        }
-        .footer-item .value {
-            border-bottom: 1px solid #333;
-            flex-grow: 1;
-            min-height: 20px;
-            padding: 0 5px;
-        }
-        
-        .final-note {
-            margin-top: 30px;
-            font-size: 14px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        [contenteditable="true"] {
-            outline: none;
-            cursor: text;
-        }
-
-        /* 定义第一个签名样式（孙旺强），使用Zhi Mang Xing字体 */
-        .signature-sun {
-            font-family: 'Zhi Mang Xing', cursive;
-            font-size: 24px; /* 调整字号以获得更佳视觉效果 */
-            font-weight: 500;
-            line-height: 1;
-            display: inline-block;
-            vertical-align: bottom;
-        }
-        
-        /* 定义第二个签名样式（沈文文），使用Ma Shan Zheng字体 */
-        .signature-shen {
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 22px;
-            font-weight: 500;
-            line-height: 1;
-            display: inline-block;
-            vertical-align: bottom;
-        }
-
-        /* 保留一个通用的手写体类，以备不时之需 */
-        .handwritten {
-            font-family: 'Ma Shan Zheng', 'KaiTi', '楷体', cursive;
-            font-size: 22px;
-            font-weight: 500;
-            line-height: 1;
-            display: inline-block;
-            vertical-align: bottom;
-        }
-        
-        /* 省略其他未修改的CSS */
-        .header, .info-section, .rp-section, .supplementary-section, .stamp, .watermark {
-            /* 这些部分的样式与之前完全相同，为简洁省略 */
-        }
+        .footer-section { border-top: 1px solid #000; padding-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px 30px; font-size: 16px; position: relative; z-index: 2; }
+        .footer-item { display: flex; align-items: flex-end; }
+        .footer-item label { white-space: nowrap; margin-right: 5px; }
+        .footer-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; }
+        .final-note { margin-top: 30px; font-size: 14px; position: relative; z-index: 2; }
+        [contenteditable="true"] { outline: none; cursor: text; }
+        .signature-sun { font-family: 'Zhi Mang Xing', cursive; font-size: 24px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
+        .signature-shen { font-family: 'Ma Shan Zheng', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
+        .handwritten { font-family: 'Ma Shan Zheng', 'KaiTi', '楷体', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
         .header { text-align: center; position: relative; z-index: 2; } .header .hospital-name { font-size: 32px; font-weight: bold; margin: 0; } .header .prescription-title { font-size: 36px; font-weight: bold; margin: 10px 0; letter-spacing: 5px; } .rx-type-box { position: absolute; top: 0; right: 0; border: 1px solid #000; padding: 2px 8px; font-size: 14px; } .stamp { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 160px; height: 160px; border: 3px solid red; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0.8; } .stamp .star { font-size: 70px; color: red; line-height: 1; } .stamp .stamp-text { position: absolute; width: 100%; height: 100%; color: red; font-weight: bold; font-size: 16px; } .stamp-text span { position: absolute; left: 50%; top: 3px; transform-origin: center 77px; } .stamp-text .char1 { transform: translateX(-50%) rotate(-75deg); } .stamp-text .char2 { transform: translateX(-50%) rotate(-60deg); } .stamp-text .char3 { transform: translateX(-50%) rotate(-45deg); } .stamp-text .char4 { transform: translateX(-50%) rotate(-30deg); } .stamp-text .char5 { transform: translateX(-50%) rotate(-15deg); } .stamp-text .char6 { transform: translateX(-50%) rotate(0deg); } .stamp-text .char7 { transform: translateX(-50%) rotate(15deg); } .stamp-text .char8 { transform: translateX(-50%) rotate(30deg); } .stamp-text .char9 { transform: translateX(-50%) rotate(45deg); } .stamp-text .char10 { transform: translateX(-50%) rotate(60deg); } .stamp-text .char11 { transform: translateX(-50%) rotate(75deg); } .stamp .inner-text { position: absolute; bottom: 35px; font-size: 14px; color: red; letter-spacing: 1px; font-weight: bold; } .info-section { border-top: 3px double #000; border-bottom: 1px solid #000; padding: 15px 0; margin-top: 15px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px 20px; font-size: 16px; position: relative; z-index: 2; } .info-item { display: flex; align-items: flex-end; } .info-item label { white-space: nowrap; margin-right: 5px; font-weight: bold; } .info-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; } .full-width { grid-column: 1 / -1; } .no-label .value { border-bottom: none; text-align: right; } .rp-section { padding: 10px 0; border-bottom: 1px solid #000; min-height: 150px; position: relative; z-index: 2; } .rp-label { font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: bold; font-style: italic; margin: 0 0 15px 0; } .medication { padding-left: 2em; font-size: 16px; } .medication-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; } .medication-details { display: flex; justify-content: space-between; margin-bottom: 8px; } .supplementary-section { padding: 15px 0; min-height: 60px; font-size: 16px; display: flex; position: relative; z-index: 2; } .supplementary-section strong { white-space: nowrap; margin-right: 5px; } .supplementary-section .handwritten-note { position: absolute; bottom: 20px; right: 150px; } .watermark { position: absolute; font-size: 24px; font-weight: bold; color: #000000; opacity: 0.1; transform: rotate(-30deg); pointer-events: none; z-index: 0; }
-
     </style>
 </head>
 <body>
 
+    <div class="generator-container">
+        <h1>处方笺信息填写</h1>
+        <form id="prescription-form">
+            <div class="form-grid">
+                 <div class="form-group full-span">
+                    <label for="no-input">处方编号 (NO.)</label>
+                    <div class="input-with-button">
+                        <input type="text" id="no-input" required>
+                        <button type="button" id="generate-no-btn">自动生成</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name-input">姓名</label>
+                    <input type="text" id="name-input" placeholder="请输入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender-input">性别</label>
+                    <select id="gender-input" required>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="age-input">年龄</label>
+                    <input type="text" id="age-input" value="48岁" required>
+                </div>
+                <div class="form-group">
+                    <label for="date-input">开具日期</label>
+                    <input type="date" id="date-input" required>
+                </div>
+                <div class="form-group full-span">
+                    <label for="medication-input">药品名称</label>
+                    <input type="text" id="medication-input" placeholder="请输入药品名称" required>
+                </div>
+                <div class="form-group full-span">
+                    <label for="spec-input">规格</label>
+                    <input type="text" id="spec-input" value="1.34mg/ml*3ml" required>
+                </div>
+                <div class="form-group full-span">
+                    <label for="dosage-input">用法用量</label>
+                    <input type="text" id="dosage-input" value="皮下注射,每周一次,一次1.0mg;" required>
+                </div>
+                <div class="form-group">
+                    <label for="physician-input">医师签名</label>
+                    <input type="text" id="physician-input" value="孙旺强">
+                </div>
+                <div class="form-group">
+                    <label for="reviewer-input">审核人签名</label>
+                    <input type="text" id="reviewer-input" value="李飞">
+                </div>
+                 <div class="form-group">
+                    <label for="pharmacy-reviewer-input">药房审核签名</label>
+                    <input type="text" id="pharmacy-reviewer-input" value="沈文文">
+                </div>
+            </div>
+            <button type="submit" class="generate-btn">生成处方笺</button>
+        </form>
+    </div>
+
+    <!-- 处方笺预览区域 -->
     <div class="prescription-container">
         <!-- Watermarks Layer -->
-        <div class="watermark" style="top: 10px; left: 40px;">已使用</div>
-        <div class="watermark" style="top: 20px; right: 200px;">已使用</div>
-        <div class="watermark" style="top: 100px; left: 320px;">已使用</div>
-        <div class="watermark" style="top: 180px; left: 20px;">已使用</div>
-        <div class="watermark" style="top: 160px; right: 20px;">已使用</div>
-        <div class="watermark" style="top: 250px; left: 380px;">已使用</div>
-        <div class="watermark" style="top: 300px; left: 150px;">已使用</div>
-        <div class="watermark" style="top: 320px; right: 280px;">已使用</div>
-        <div class="watermark" style="top: 400px; left: 50px;">已使用</div>
-        <div class="watermark" style="top: 480px; right: 50px;">已使用</div>
-        <div class="watermark" style="top: 500px; left: 220px;">已使用</div>
-        <div class="watermark" style="top: 550px; left: 400px;">已使用</div>
-        <div class="watermark" style="top: 600px; right: 250px;">已使用</div>
-        <div class="watermark" style="top: 680px; left: 100px;">已使用</div>
-        <div class="watermark" style="top: 700px; right: 100px;">已使用</div>
+        <div class="watermark" style="top: 10px; left: 40px;">已使用</div><div class="watermark" style="top: 20px; right: 200px;">已使用</div><div class="watermark" style="top: 100px; left: 320px;">已使用</div><div class="watermark" style="top: 180px; left: 20px;">已使用</div><div class="watermark" style="top: 160px; right: 20px;">已使用</div><div class="watermark" style="top: 250px; left: 380px;">已使用</div><div class="watermark" style="top: 300px; left: 150px;">已使用</div><div class="watermark" style="top: 320px; right: 280px;">已使用</div><div class="watermark" style="top: 400px; left: 50px;">已使用</div><div class="watermark" style="top: 480px; right: 50px;">已使用</div><div class="watermark" style="top: 500px; left: 220px;">已使用</div><div class="watermark" style="top: 550px; left: 400px;">已使用</div><div class="watermark" style="top: 600px; right: 250px;">已使用</div><div class="watermark" style="top: 680px; left: 100px;">已使用</div><div class="watermark" style="top: 700px; right: 100px;">已使用</div>
 
         <!-- Content Layer -->
         <div class="header">
             <div class="rx-type-box">普通处方</div>
             <h1 class="hospital-name">成都双流桃子互联网医院</h1>
             <h2 class="prescription-title">处方笺</h2>
-            <div class="stamp">
-                <div class="star">★</div>
-                <div class="stamp-text">
-                    <span class="char1">成</span> <span class="char2">都</span> <span class="char3">双</span> <span class="char4">流</span> <span class="char5">桃</span> <span class="char6">子</span> <span class="char7">互</span> <span class="char8">联</span> <span class="char9">网</span> <span class="char10">医</span> <span class="char11">院</span>
-                </div>
-                 <div class="inner-text">医疗专用章</div>
-            </div>
+            <div class="stamp"><div class="star">★</div><div class="stamp-text"><span class="char1">成</span> <span class="char2">都</span> <span class="char3">双</span> <span class="char4">流</span> <span class="char5">桃</span> <span class="char6">子</span> <span class="char7">互</span> <span class="char8">联</span> <span class="char9">网</span> <span class="char10">医</span> <span class="char11">院</span></div><div class="inner-text">医疗专用章</div></div>
         </div>
-
         <div class="info-section">
-            <div class="info-item"> <label>NO.</label> <span class="value" contenteditable="true">130750175218385</span> </div> <div class="info-item no-label" style="grid-column: 3 / 4;"> <span class="value" contenteditable="true">2025-11-01</span> </div> <div class="info-item"> <label>姓名:</label> <span class="value" contenteditable="true">叶伟忠</span> </div> <div class="info-item"> <label>性别:</label> <span class="value" contenteditable="true">男</span> </div> <div class="info-item"> <label>年龄:</label> <span class="value" contenteditable="true">48岁</span> </div> <div class="info-item"> <label>费别:</label> <span class="value" contenteditable="true">自费</span> </div> <div class="info-item" style="grid-column: 2 / 4;"> <label>科别:</label> <span class="value" contenteditable="true">普通内科</span> </div> <div class="info-item full-width"> <label>临床诊断:</label> <span class="value" contenteditable="true">2型糖尿病</span> </div>
+            <div class="info-item"><label>NO.</label> <span id="output-no" class="value" contenteditable="true"></span></div>
+            <div class="info-item no-label" style="grid-column: 3 / 4;"><span id="output-date" class="value" contenteditable="true"></span></div>
+            <div class="info-item"><label>姓名:</label><span id="output-name" class="value" contenteditable="true"></span></div>
+            <div class="info-item"><label>性别:</label><span id="output-gender" class="value" contenteditable="true"></span></div>
+            <div class="info-item"><label>年龄:</label> <span id="output-age" class="value" contenteditable="true"></span></div>
+            <div class="info-item"><label>费别:</label> <span class="value" contenteditable="true">自费</span></div>
+            <div class="info-item" style="grid-column: 2 / 4;"><label>科别:</label> <span class="value" contenteditable="true">普通内科</span></div>
+            <div class="info-item full-width"><label>临床诊断:</label> <span class="value" contenteditable="true">2型糖尿病</span></div>
         </div>
-
         <div class="rp-section">
             <p class="rp-label">Rp:</p>
-            <div class="medication"> <div class="medication-name" contenteditable="true">司美格鲁肽注射液</div> <div class="medication-details"> <span contenteditable="true">1.34mg/ml*3ml</span> <span contenteditable="true">x 3盒</span> </div> <div> <strong>用法用量:</strong> <span contenteditable="true">皮下注射,每周一次,一次1.0mg;</span> </div> </div>
+            <div class="medication">
+                <div id="output-medication" class="medication-name" contenteditable="true"></div>
+                <div class="medication-details">
+                    <span id="output-spec" contenteditable="true"></span>
+                    <span contenteditable="true">x 3盒</span>
+                </div>
+                <div><strong>用法用量:</strong> <span id="output-dosage" contenteditable="true"></span></div>
+            </div>
         </div>
-
         <div class="supplementary-section">
             <strong>补充说明:</strong>
             <span contenteditable="true">无过敏药史,因疾病需要,特此确定用药。</span>
-            <span class="signature-sun handwritten-note">孙旺强</span>
+            <span id="output-sup-physician" class="signature-sun handwritten-note"></span>
         </div>
-
         <div class="footer-section">
-            <div class="footer-item">
-                <label>医师:</label>
-                <!-- 应用新的签名样式 -->
-                <span class="value signature-sun">孙旺强</span>
-            </div>
-            <div class="footer-item">
-                <label>审核:</label>
-                <span class="value handwritten">李飞</span>
-            </div>
-             <div class="footer-item">
-                <label>处方金额:</label>
-                <span class="value" contenteditable="true"></span>
-            </div>
-            <div class="footer-item">
-                <label>药房审核:</label>
-                <!-- 应用新的签名样式 -->
-                <span class="value signature-shen">沈文文</span>
-            </div>
-            <div class="footer-item">
-                <label>药房调配:</label>
-                <span class="value" contenteditable="true"></span>
-            </div>
-            <div class="footer-item">
-                <label>药房核对:</label>
-                <span class="value" contenteditable="true"></span>
-            </div>
-            <div class="footer-item" style="grid-column: 1/2">
-                <label>药房发药:</label>
-                <span class="value" contenteditable="true"></span>
-            </div>
+            <div class="footer-item"><label>医师:</label><span id="output-physician" class="value signature-sun"></span></div>
+            <div class="footer-item"><label>审核:</label><span id="output-reviewer" class="value handwritten"></span></div>
+            <div class="footer-item"><label>处方金额:</label><span class="value" contenteditable="true"></span></div>
+            <div class="footer-item"><label>药房审核:</label><span id="output-pharmacy-reviewer" class="value signature-shen"></span></div>
+            <div class="footer-item"><label>药房调配:</label><span class="value" contenteditable="true"></span></div>
+            <div class="footer-item"><label>药房核对:</label><span class="value" contenteditable="true"></span></div>
+            <div class="footer-item" style="grid-column: 1/2"><label>药房发药:</label><span class="value" contenteditable="true"></span></div>
         </div>
-        
-        <div class="final-note">
-            <strong>注:</strong> 处方自开具日起3日内有效。
-        </div>
+        <div class="final-note"><strong>注:</strong> 处方自开具日起3日内有效。</div>
     </div>
 
+    <script>
+        // 获取所有表单和输出元素的引用
+        const prescriptionForm = document.getElementById('prescription-form');
+        const noInput = document.getElementById('no-input');
+        const generateNoBtn = document.getElementById('generate-no-btn');
+        const nameInput = document.getElementById('name-input');
+        const genderInput = document.getElementById('gender-input');
+        const ageInput = document.getElementById('age-input');
+        const dateInput = document.getElementById('date-input');
+        const medicationInput = document.getElementById('medication-input');
+        const specInput = document.getElementById('spec-input');
+        const dosageInput = document.getElementById('dosage-input');
+        const physicianInput = document.getElementById('physician-input');
+        const reviewerInput = document.getElementById('reviewer-input');
+        const pharmacyReviewerInput = document.getElementById('pharmacy-reviewer-input');
+
+        const outputNo = document.getElementById('output-no');
+        const outputName = document.getElementById('output-name');
+        const outputGender = document.getElementById('output-gender');
+        const outputAge = document.getElementById('output-age');
+        const outputDate = document.getElementById('output-date');
+        const outputMedication = document.getElementById('output-medication');
+        const outputSpec = document.getElementById('output-spec');
+        const outputDosage = document.getElementById('output-dosage');
+        const outputPhysician = document.getElementById('output-physician');
+        const outputSupPhysician = document.getElementById('output-sup-physician');
+        const outputReviewer = document.getElementById('output-reviewer');
+        const outputPharmacyReviewer = document.getElementById('output-pharmacy-reviewer');
+
+        /**
+         * 生成一个基于时间戳的、看起来真实的15位处方编号
+         * @returns {string} - 生成的15位编号字符串
+         */
+        function generateRealisticPrescriptionNumber() {
+            // 1. 获取当前时间的13位毫秒时间戳
+            const timestamp = Date.now().toString();
+
+            // 2. 生成一个0到99之间的两位随机数，不足两位时在前面补0
+            const randomSuffix = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+
+            // 3. 组合成一个15位的编号
+            return timestamp + randomSuffix;
+        }
+
+        // 监听“自动生成”按钮的点击事件
+        generateNoBtn.addEventListener('click', function() {
+            noInput.value = generateRealisticPrescriptionNumber();
+        });
+
+        // 定义一个函数来更新处方笺预览内容
+        function updatePrescription() {
+            outputNo.textContent = noInput.value || ' ';
+            outputName.textContent = nameInput.value || ' ';
+            outputGender.textContent = genderInput.value || ' ';
+            outputAge.textContent = ageInput.value || ' ';
+            outputDate.textContent = dateInput.value || ' ';
+            outputMedication.textContent = medicationInput.value || ' ';
+            outputSpec.textContent = specInput.value || ' ';
+            outputDosage.textContent = dosageInput.value || ' ';
+            
+            const physicianName = physicianInput.value || ' ';
+            outputPhysician.textContent = physicianName;
+            outputSupPhysician.textContent = physicianName;
+            
+            outputReviewer.textContent = reviewerInput.value || ' ';
+            outputPharmacyReviewer.textContent = pharmacyReviewerInput.value || ' ';
+        }
+        
+        // 页面加载时初始化表单和预览
+        function initializeForm() {
+            dateInput.valueAsDate = new Date(); // 设置默认日期为今天
+            noInput.value = generateRealisticPrescriptionNumber(); // 生成一个初始的真实感编号
+            updatePrescription(); // 用所有默认值填充预览
+        }
+        
+        initializeForm();
+
+        // 监听主提交按钮的事件
+        prescriptionForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止页面刷新
+            updatePrescription(); // 更新预览
+        });
+    </script>
 </body>
 </html>
