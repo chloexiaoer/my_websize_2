@@ -143,7 +143,17 @@
         .signature-sun { font-family: 'Zhi Mang Xing', cursive; font-size: 24px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
         .signature-shen { font-family: 'Ma Shan Zheng', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
         .handwritten { font-family: 'Ma Shan Zheng', 'KaiTi', '楷体', cursive; font-size: 22px; font-weight: 500; line-height: 1; display: inline-block; vertical-align: bottom; }
-        .header { text-align: center; position: relative; z-index: 2; } .header .hospital-name { font-size: 32px; font-weight: bold; margin: 0; } .header .prescription-title { font-size: 36px; font-weight: bold; margin: 10px 0; letter-spacing: 5px; } .rx-type-box { position: absolute; top: 0; right: 0; border: 1px solid #000; padding: 2px 8px; font-size: 14px; } .stamp { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 160px; height: 160px; border: 3px solid red; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0.8; } .stamp .star { font-size: 70px; color: red; line-height: 1; } .stamp .stamp-text { position: absolute; width: 100%; height: 100%; color: red; font-weight: bold; font-size: 16px; } .stamp-text span { position: absolute; left: 50%; top: 3px; transform-origin: center 77px; } .stamp-text .char1 { transform: translateX(-50%) rotate(-75deg); } .stamp-text .char2 { transform: translateX(-50%) rotate(-60deg); } .stamp-text .char3 { transform: translateX(-50%) rotate(-45deg); } .stamp-text .char4 { transform: translateX(-50%) rotate(-30deg); } .stamp-text .char5 { transform: translateX(-50%) rotate(-15deg); } .stamp-text .char6 { transform: translateX(-50%) rotate(0deg); } .stamp-text .char7 { transform: translateX(-50%) rotate(15deg); } .stamp-text .char8 { transform: translateX(-50%) rotate(30deg); } .stamp-text .char9 { transform: translateX(-50%) rotate(45deg); } .stamp-text .char10 { transform: translateX(-50%) rotate(60deg); } .stamp-text .char11 { transform: translateX(-50%) rotate(75deg); } .stamp .inner-text { position: absolute; bottom: 35px; font-size: 14px; color: red; letter-spacing: 1px; font-weight: bold; } .info-section { border-top: 3px double #000; border-bottom: 1px solid #000; padding: 15px 0; margin-top: 15px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px 20px; font-size: 16px; position: relative; z-index: 2; } .info-item { display: flex; align-items: flex-end; } .info-item label { white-space: nowrap; margin-right: 5px; font-weight: bold; } .info-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; } .full-width { grid-column: 1 / -1; } .no-label .value { border-bottom: none; text-align: right; } .rp-section { padding: 10px 0; border-bottom: 1px solid #000; min-height: 150px; position: relative; z-index: 2; } .rp-label { font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: bold; font-style: italic; margin: 0 0 15px 0; } .medication { padding-left: 2em; font-size: 16px; } .medication-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; } .medication-details { display: flex; justify-content: space-between; margin-bottom: 8px; } .supplementary-section { padding: 15px 0; min-height: 60px; font-size: 16px; display: flex; position: relative; z-index: 2; } .supplementary-section strong { white-space: nowrap; margin-right: 5px; } .supplementary-section .handwritten-note { position: absolute; bottom: 20px; right: 150px; } .watermark { position: absolute; font-size: 24px; font-weight: bold; color: #000000; opacity: 0.1; transform: rotate(-30deg); pointer-events: none; z-index: 0; }
+        
+        .header { text-align: center; position: relative; z-index: 2; }
+        .header .hospital-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+            color: #000; /* 修改：将颜色设置为黑色 */
+        }
+        .header .prescription-title { font-size: 36px; font-weight: bold; margin: 10px 0; letter-spacing: 5px; }
+        .rx-type-box { position: absolute; top: 0; right: 0; border: 1px solid #000; padding: 2px 8px; font-size: 14px; }
+        .stamp { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 160px; height: 160px; border: 3px solid red; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0.8; } .stamp .star { font-size: 70px; color: red; line-height: 1; } .stamp .stamp-text { position: absolute; width: 100%; height: 100%; color: red; font-weight: bold; font-size: 16px; } .stamp-text span { position: absolute; left: 50%; top: 3px; transform-origin: center 77px; } .stamp-text .char1 { transform: translateX(-50%) rotate(-75deg); } .stamp-text .char2 { transform: translateX(-50%) rotate(-60deg); } .stamp-text .char3 { transform: translateX(-50%) rotate(-45deg); } .stamp-text .char4 { transform: translateX(-50%) rotate(-30deg); } .stamp-text .char5 { transform: translateX(-50%) rotate(-15deg); } .stamp-text .char6 { transform: translateX(-50%) rotate(0deg); } .stamp-text .char7 { transform: translateX(-50%) rotate(15deg); } .stamp-text .char8 { transform: translateX(-50%) rotate(30deg); } .stamp-text .char9 { transform: translateX(-50%) rotate(45deg); } .stamp-text .char10 { transform: translateX(-50%) rotate(60deg); } .stamp-text .char11 { transform: translateX(-50%) rotate(75deg); } .stamp .inner-text { position: absolute; bottom: 35px; font-size: 14px; color: red; letter-spacing: 1px; font-weight: bold; } .info-section { border-top: 3px double #000; border-bottom: 1px solid #000; padding: 15px 0; margin-top: 15px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 10px 20px; font-size: 16px; position: relative; z-index: 2; } .info-item { display: flex; align-items: flex-end; } .info-item label { white-space: nowrap; margin-right: 5px; font-weight: bold; } .info-item .value { border-bottom: 1px solid #333; flex-grow: 1; min-height: 20px; padding: 0 5px; } .full-width { grid-column: 1 / -1; } .no-label .value { border-bottom: none; text-align: right; } .rp-section { padding: 10px 0; border-bottom: 1px solid #000; min-height: 150px; position: relative; z-index: 2; } .rp-label { font-family: 'Times New Roman', Times, serif; font-size: 32px; font-weight: bold; font-style: italic; margin: 0 0 15px 0; } .medication { padding-left: 2em; font-size: 16px; } .medication-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; } .medication-details { display: flex; justify-content: space-between; margin-bottom: 8px; } .supplementary-section { padding: 15px 0; min-height: 60px; font-size: 16px; display: flex; position: relative; z-index: 2; } .supplementary-section strong { white-space: nowrap; margin-right: 5px; } .supplementary-section .handwritten-note { position: absolute; bottom: 20px; right: 150px; } .watermark { position: absolute; font-size: 24px; font-weight: bold; color: #000000; opacity: 0.1; transform: rotate(-30deg); pointer-events: none; z-index: 0; }
     </style>
 </head>
 <body>
@@ -291,22 +301,15 @@
          * @returns {string} - 生成的15位编号字符串
          */
         function generateRealisticPrescriptionNumber() {
-            // 1. 获取当前时间的13位毫秒时间戳
             const timestamp = Date.now().toString();
-
-            // 2. 生成一个0到99之间的两位随机数，不足两位时在前面补0
             const randomSuffix = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-
-            // 3. 组合成一个15位的编号
             return timestamp + randomSuffix;
         }
 
-        // 监听“自动生成”按钮的点击事件
         generateNoBtn.addEventListener('click', function() {
             noInput.value = generateRealisticPrescriptionNumber();
         });
 
-        // 定义一个函数来更新处方笺预览内容
         function updatePrescription() {
             outputNo.textContent = noInput.value || ' ';
             outputName.textContent = nameInput.value || ' ';
@@ -325,19 +328,17 @@
             outputPharmacyReviewer.textContent = pharmacyReviewerInput.value || ' ';
         }
         
-        // 页面加载时初始化表单和预览
         function initializeForm() {
-            dateInput.valueAsDate = new Date(); // 设置默认日期为今天
-            noInput.value = generateRealisticPrescriptionNumber(); // 生成一个初始的真实感编号
-            updatePrescription(); // 用所有默认值填充预览
+            dateInput.valueAsDate = new Date();
+            noInput.value = generateRealisticPrescriptionNumber();
+            updatePrescription();
         }
         
         initializeForm();
 
-        // 监听主提交按钮的事件
         prescriptionForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // 阻止页面刷新
-            updatePrescription(); // 更新预览
+            event.preventDefault();
+            updatePrescription();
         });
     </script>
 </body>
